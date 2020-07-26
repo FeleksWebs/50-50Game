@@ -2,7 +2,8 @@ import React from "react";
 
 import "./App.css";
 import MainPage from "./MainPage/MainPage";
-import playRoom from "./JoinRoom/newRoom";
+import Heads from "./JoinRoom/Heads";
+import Tails from "./JoinRoom/Tails";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
@@ -13,7 +14,8 @@ function App() {
       <Router>
         <div className="sans-serif">
           <Route path="/" exact component={MainPage} />
-          <Route path="/chat" component={playRoom} />
+          <Route path="/Heads" component={Heads} />
+          <Route path="/Tails" component={Tails} />
         </div>
       </Router>
     </div>

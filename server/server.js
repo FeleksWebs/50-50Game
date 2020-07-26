@@ -1,37 +1,51 @@
-const express = require("express");
-const server = require("http").Server(express);
 const io = require("socket.io").listen(3000);
 
-let Current_sockets = 0;
+var Users = {};
+var UsersList = [];
 
-const users = {};
-
+//On connect
 io.on("connection", (socket) => {
-  Current_sockets++;
+  console.log("Socket : " + socket.id + " connected");
 
-  console.log("socket connected :" + Current_sockets);
+  //New Connection
+  socket.on("NewConnection", (user) => {
+    console.log(user);
+    if (!user.name) {
+      return console.log("preventing null");
+    }
 
-  socket.on("testCon", () => {
-    console.log("test connection works");
+    socket.nickname = user.name;
+    var User = {
+      name: user.name,
+      id: socket.id,
+    };
+    Users[socket.nickname] = User;
+    UsersList.push(Users[socket.nickname]);
+    //Send List of Current connected sockets
+    if (UsersList.length <= 2) {
+      io.sockets.emit("Check Current Users", UsersList);
+    }
   });
-  //New user
-  socket.on("new-user", (name) => {
-    users[socket.id] = name;
-    socket.broadcast.emit("user-connected", name);
+
+  socket.on("Check List of Users", () => {
+    io.sockets.emit("Check Current Users", UsersList);
   });
 
-  //After form Submit
-  socket.on("send-chat-msg", (message) => {
-    socket.broadcast.emit("chat-message", {
-      message: message,
-      name: users[socket.id],
-    });
-  });
-
-  //DISCONNECT
+  // ***WHEN DISCONNECTING, PASS USERLIST BACK TO CLIENT***
+  //On disconnect
   socket.on("disconnect", () => {
-    socket.broadcast.emit("user-dc", users[socket.id]);
-    delete users[socket.id];
+    //Removing User from Arrays
+    io.emit("UserDisconnect", socket.nickname);
+    for (var i = 0; i < UsersList.length; i++) {
+      if (UsersList[i].name == socket.nickname) {
+        UsersList.splice(i, 1);
+        console.log(UsersList);
+        console.log(`Removing ${socket.nickname} from array list`);
+      }
+    }
+
+    //Deleting socket
+    delete Users[socket.nickname];
   });
 });
 

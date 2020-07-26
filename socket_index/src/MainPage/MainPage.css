@@ -1,0 +1,37 @@
+.navbar {
+  border-radius: 0;
+}
+.Title-Mid {
+  text-align: center;
+}
+.coin-css {
+  height: 100px;
+  width: 100px;
+  border-radius: 100px;
+  margin: 20px;
+  outline: none;
+}
+.coin-css:hover {
+  background-color: grey;
+  color: white;
+}
+.Titlenav {
+  color: white;
+  padding: 0;
+  margin: 10px;
+}
+.left-row-body {
+  border: 1px solid black;
+}
+.side {
+  background-color: #222222;
+  border-radius: 10px;
+  border: 2px solid white;
+  color: white;
+}
+.center-info {
+  background-color: #222222;
+  color: white;
+  border: 3px solid black;
+  border-radius: 10px;
+}
