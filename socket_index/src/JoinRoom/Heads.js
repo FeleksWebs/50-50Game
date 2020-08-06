@@ -1,41 +1,31 @@
-import React, { Component, useState } from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-const ENDPOINT = "http://localhost:3000";
-let socket = io(ENDPOINT);
-//Recive user info
 
-let CurrentName = prompt("Your Name?");
-//Create new connection
-socket.emit("NewConnection", { name: CurrentName });
-
-function Heads() {
-  let TempUsers = [];
+const Heads = ({ location }) => {
+  //Use socket.io to update UseState
   const [CurrentUsers, NewUsers] = useState([]);
+  const ENDPOINT = "http://localhost:3000";
+  useEffect(() => {
+    console.log(location.search);
 
-  function Update_List(data) {
-    for (var i = 0; i < data.length; i++) {
-      if (!TempUsers.includes(data[i].name)) {
-        TempUsers.push(data[i].name);
+    let socket = io(ENDPOINT);
+
+    let CurrentName = prompt("Your Name?");
+    if (!CurrentName) {
+      return alert("Something not filled please reload page");
+    }
+
+    socket.emit("join", { name: CurrentName, CoinFace: "Heads" });
+
+    var DisplayUsers = [];
+    socket.on("UsersInRoom", (data) => {
+      DisplayUsers = [];
+      for (var item of data.user) {
+        DisplayUsers.push(item.name);
       }
-    }
-    NewUsers(TempUsers);
-  }
-
-  socket.on("Check Current Users", (data) => {
-    Update_List(data);
-    console.log(CurrentUsers);
-  });
-
-  //*** ON DISCONNECT USE Update_List to update STATE with new array***
-  //Disconnecting Socket
-  socket.on("UserDisconnect", (data) => {
-    console.log(`${data} has disconnected`);
-
-    if (CurrentUsers.includes(data)) {
-      console.log("___________");
-    }
-    console.log(CurrentUsers);
-  });
+      NewUsers(DisplayUsers);
+    });
+  }, [ENDPOINT, location.search]);
 
   return (
     <div>
@@ -48,6 +38,6 @@ function Heads() {
       </ul>
     </div>
   );
-}
+};
 
 export default Heads;

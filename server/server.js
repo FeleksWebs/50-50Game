@@ -1,52 +1,69 @@
-const io = require("socket.io").listen(3000);
+const PORT = 3000;
+const io = require("socket.io").listen(PORT);
 
-var Users = {};
-var UsersList = [];
+const {
+  addUser,
+  removeUser,
+  GetRoomUsers,
+  FindAvailableRooms,
+  GenerateRoomKey,
+} = require("./Users");
 
 //On connect
 io.on("connection", (socket) => {
   console.log("Socket : " + socket.id + " connected");
 
-  //New Connection
-  socket.on("NewConnection", (user) => {
-    console.log(user);
-    if (!user.name) {
-      return console.log("preventing null");
+  //Join a room
+  socket.on("join", ({ name, CoinFace }) => {
+    //Get first available room
+    let userRoom = "";
+    console.log("Before lobby");
+    //1.) FindAvailableRooms is having issues after loop
+    //2.) if FindAvailableRooms is empty, create new key
+
+    if (FindAvailableRooms()) {
+      userRoom = FindAvailableRooms()[0].room;
+    } else {
+      userRoom = GenerateRoomKey();
     }
 
-    socket.nickname = user.name;
-    var User = {
-      name: user.name,
+    //Create User Object
+    const { user } = addUser({
       id: socket.id,
-    };
-    Users[socket.nickname] = User;
-    UsersList.push(Users[socket.nickname]);
-    //Send List of Current connected sockets
-    if (UsersList.length <= 2) {
-      io.sockets.emit("Check Current Users", UsersList);
+      name: name,
+      room: userRoom,
+      face: CoinFace,
+    });
+
+    socket.join(user.room);
+    socket.roomName = userRoom;
+    console.log("After lobby");
+
+    console.log(FindAvailableRooms());
+    if (user) {
+      //emit to everyone in that room
+
+      var CurrentRoomUsers = GetRoomUsers(user.room);
+      io.to(user.room).emit("UsersInRoom", {
+        user: CurrentRoomUsers,
+      });
     }
   });
 
-  socket.on("Check List of Users", () => {
-    io.sockets.emit("Check Current Users", UsersList);
-  });
-
-  // ***WHEN DISCONNECTING, PASS USERLIST BACK TO CLIENT***
-  //On disconnect
+  //DISCONNECT
   socket.on("disconnect", () => {
-    //Removing User from Arrays
-    io.emit("UserDisconnect", socket.nickname);
-    for (var i = 0; i < UsersList.length; i++) {
-      if (UsersList[i].name == socket.nickname) {
-        UsersList.splice(i, 1);
-        console.log(UsersList);
-        console.log(`Removing ${socket.nickname} from array list`);
-      }
-    }
+    //Remove socket from Users.js
+    removeUser(socket.id);
 
-    //Deleting socket
-    delete Users[socket.nickname];
+    //Update that room with new users..
+    var CurrentRoomUsers = GetRoomUsers(socket.roomName);
+    io.to(socket.roomName).emit("UsersInRoom", {
+      user: CurrentRoomUsers,
+    });
+
+    //Delete socket
+    delete socket;
   });
 });
 
-console.log(`Server has started on port ${3000}`);
+console.log(`Server has started on port ${PORT}`);

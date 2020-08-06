@@ -29,7 +29,7 @@ export default () => (
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-6 test " style={{ text_align: "center" }}>
-            <Link to="/Heads">
+            <Link to="/Heads?room=123">
               <button className="coin-css" style={{ color: "black" }}>
                 <b>Heads</b>
               </button>
