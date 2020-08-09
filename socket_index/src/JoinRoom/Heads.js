@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
+import "./Heads.css";
 
 const Heads = ({ location }) => {
   //Use socket.io to update UseState
@@ -29,11 +30,30 @@ const Heads = ({ location }) => {
 
   return (
     <div>
+      <div className="row justify-content-end">
+        <div className="col">
+          {CurrentUsers.map((item, index) => {
+            if (index === 0) {
+              return <div className="col">{item}</div>;
+            }
+          })}
+        </div>
+        <div className="col">coin</div>
+        <div className="col">
+          {CurrentUsers.map((item, index) => {
+            if (index === 1) {
+              return <div className="col">{item}</div>;
+            }
+          })}
+        </div>
+      </div>
+
       <h1>New Room : Heads</h1>
-      <button>Check Current Users</button>
       <ul>
         {CurrentUsers.map((item) => (
-          <li key={`User_${item}`}>{item}</li>
+          <li key={`User_${item}`} className="NameContainer">
+            {item}
+          </li>
         ))}
       </ul>
     </div>

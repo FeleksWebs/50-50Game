@@ -1,6 +1,7 @@
 import React from "react";
 
 import "./App.css";
+
 import MainPage from "./MainPage/MainPage";
 import Heads from "./JoinRoom/Heads";
 import Tails from "./JoinRoom/Tails";

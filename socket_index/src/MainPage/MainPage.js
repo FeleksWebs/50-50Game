@@ -1,17 +1,55 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./MainPage.css";
 
 export default () => (
-  <div>
-    <nav className="navbar navbar-inverse">
+  <div className="PageBody">
+    {/* <nav className="navbar navbar-inverse">
       <div className="container-fluid">
-        <h3 className="text-center Titlenav">
-          <b>50 / 50 rng Game</b>
-        </h3>
+        <div className="navbar-header">
+          <button
+            type="button"
+            className="navbar-toggle"
+            data-toggle="collapse"
+            data-target="#myNavbar"
+          >
+            <span className="icon-bar"></span>
+            <span className="icon-bar"></span>
+            <span className="icon-bar"></span>
+          </button>
+          <a className="navbar-brand" href="#">
+            Logo
+          </a>
+        </div>
+        <div className="collapse navbar-collapse" id="myNavbar">
+          <ul className="nav navbar-nav">
+            <li className="active">
+              <a href="#">Home</a>
+            </li>
+            <li>
+              <a href="#">About</a>
+            </li>
+            <li>
+              <a href="#">Projects</a>
+            </li>
+            <li>
+              <a href="#">Contact</a>
+            </li>
+          </ul>
+          <ul className="nav navbar-nav navbar-right">
+            <li>
+              <a href="#">
+                <span className="glyphicon glyphicon-log-in"></span> Login
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </nav>
-    <div className="col-sm-2 sidenav side">
+    </nav> */}
+
+    <div class="jumbotron LoginJumbo">
+      {" "}
       <h4>
         <b>Currently playing as: </b>Guest
       </h4>
@@ -22,35 +60,29 @@ export default () => (
       </h4>
     </div>
 
-    <div className="col-sm-8 center-info">
-      <h2 className="Title-Mid">
-        <b>Choose your side</b>
-      </h2>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-md-6 test " style={{ text_align: "center" }}>
-            <Link to="/Heads?room=123">
-              <button className="coin-css" style={{ color: "black" }}>
-                <b>Heads</b>
-              </button>
-            </Link>
-          </div>
-          <div className="col-md-6 test" style={{ text_align: "center" }}>
-            <Link to="/Tails">
-              <button className="coin-css" style={{ color: "black" }}>
-                {" "}
-                <b>Tails</b>
-              </button>
-            </Link>
-          </div>
+    <div class="row justify-content-end">
+      <div class="col">
+        {" "}
+        <div className=" container " style={{ text_align: "center" }}>
+          <Link to="/Heads?room=123">
+            <button className="coin-css" style={{ color: "black" }}>
+              <b>Heads</b>
+            </button>
+          </Link>
+        </div>
+        <div className="container" style={{ text_align: "center" }}>
+          <Link to="/Tails">
+            <button className="coin-css" style={{ color: "black" }}>
+              {" "}
+              <b>Tails</b>
+            </button>
+          </Link>
         </div>
       </div>
     </div>
 
-    <div className="col-sm-2 sidenav side">
-      <h4>
-        <b>Online players: 0</b>
-      </h4>
+    <div class="jumbotron">
+      <b>Online players: 0</b>
     </div>
   </div>
 );
